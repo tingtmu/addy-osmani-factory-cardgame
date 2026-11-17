@@ -24,18 +24,14 @@ The corresponding live labels use the `factory:` prefix, for example
 
 ---
 
-## Example entry (delete this)
+## FQ-1 (Milestone 1: data structures and 3 starter cards), from docs/factory/specs/FQ-1/
+All entries: load_bearing false, gate_level full, confidence high, last_triaged 2026-11-17.
 
-## FQ-142: Expired tokens return 500 instead of 401
-- disposition: ready-to-implement
-- source: https://github.com/owner/repo/issues/142
-- last_triaged: 2026-08-16
-- repro: confirmed
-- files_expected: src/auth/verify.ts, src/auth/verify.test.ts
-- load_bearing: true
-- gate_level: deep
-- done_when: `verify.test.ts` has a case for an expired token asserting a 401 response, it fails on `main`, and it passes after the change
-- confidence: high
-- notes: `src/auth/**` is load-bearing, so this cannot be auto-implemented despite being simple. Route through factory-spec or implement with a forced human read.
+- #2 slice 0 Tooling skeleton: ready-to-implement. files: pyproject.toml, .gitignore, src/cardengine/__init__.py, tests/test_smoke.py. done_when: gates full GREEN with no skips; smoke test imports cardengine.
+- #3 slice 1 Tracer bullet: wait-to-implement (slice 0). files: models.py, loader.py, tests/fixtures/one_card.json, tests/test_loader.py.
+- #4 slice 2 Effect registry and validation: wait-to-implement (slice 1). files: effects.py, loader.py, tests/test_effects.py.
+- #5 slice 3 Card-level validation: wait-to-implement (slice 2). files: loader.py, tests/test_loader_errors.py.
+- #6 slice 4 Status and Unit shapes: wait-to-implement (slice 1). files: models.py, tests/test_models.py.
+- #7 slice 5 Three starter cards: wait-to-implement (slices 2, 3). files: data/cards.json, tests/test_starter_cards.py.
 
 ---
