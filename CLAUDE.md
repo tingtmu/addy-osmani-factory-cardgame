@@ -6,11 +6,11 @@ entirely as data. Personal greenfield project; see `spec.md` for goals and miles
 ## Commands
 
 ```bash
-python -m venv .venv && . .venv/bin/activate && pip install -e ".[dev]"   # install
-pytest                                                                    # test
-ruff check .                                                              # lint
-mypy src                                                                  # types
-./.claude/scripts/gates.sh full   # the factory's deterministic verdict
+uv venv .venv && uv pip install --python .venv/bin/python pytest ruff mypy   # install
+.venv/bin/pytest                                                            # test
+.venv/bin/ruff check .                                                      # lint
+.venv/bin/mypy .                                                            # types
+PATH=.venv/bin:$PATH ./.claude/scripts/gates.sh full   # the factory's deterministic verdict
 ```
 
 ## Conventions
