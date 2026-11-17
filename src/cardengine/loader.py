@@ -59,11 +59,15 @@ def parse_card(raw: Mapping[str, object]) -> Card:
 
 
 def load_cards(path: Path) -> dict[str, Card]:
-    with path.open(encoding="utf-8") as handle:
-        try:
+    try:
+        with path.open(encoding="utf-8") as handle:
             data: object = json.load(handle)
-        except json.JSONDecodeError as exc:
-            raise CardDataError(f"{path}: malformed JSON: {exc}") from exc
+    except json.JSONDecodeError as exc:
+        raise CardDataError(f"{path}: malformed JSON: {exc}") from exc
+    except UnicodeDecodeError as exc:
+        raise CardDataError(f"{path}: not valid UTF-8: {exc}") from exc
+    except RecursionError as exc:
+        raise CardDataError(f"{path}: JSON is nested too deeply") from exc
     if not isinstance(data, dict):
         raise CardDataError(f"{path}: top-level JSON must be an object with a 'cards' list")
     raw_cards = data.get("cards")

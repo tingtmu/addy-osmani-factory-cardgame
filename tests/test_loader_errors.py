@@ -54,7 +54,7 @@ def test_empty_effects_is_rejected() -> None:
         parse_card(_card(effects=[]))
 
 
-@pytest.mark.parametrize("effects", [{"type": "damage", "amount": 6}, "damage"])
+@pytest.mark.parametrize("effects", [{"type": "damage", "amount": 6}, 5, None])
 def test_effects_not_a_list_is_rejected(effects: object) -> None:
     with pytest.raises(CardDataError, match=CARD_ID):
         parse_card(_card(effects=effects))
@@ -77,6 +77,21 @@ def test_missing_id_is_rejected() -> None:
 
 def test_malformed_json_names_the_path(tmp_path: Path) -> None:
     path = _write(tmp_path, '{"cards": [')
+
+    with pytest.raises(CardDataError, match=re.escape(str(path))):
+        load_cards(path)
+
+
+def test_invalid_utf8_names_the_path(tmp_path: Path) -> None:
+    path = tmp_path / "cards.json"
+    path.write_bytes(b'{"cards": []}\xff')
+
+    with pytest.raises(CardDataError, match=re.escape(str(path))):
+        load_cards(path)
+
+
+def test_deeply_nested_json_names_the_path(tmp_path: Path) -> None:
+    path = _write(tmp_path, "[" * 100000)
 
     with pytest.raises(CardDataError, match=re.escape(str(path))):
         load_cards(path)
