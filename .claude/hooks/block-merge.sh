@@ -56,10 +56,18 @@ fi
 
 # Editing the charter or the gate script through the shell, which would otherwise
 # route around the Edit deny rules in settings.json.
-if printf '%s' "$CMD" | grep -qE '(docs/factory/CHARTER\.md|\.factory/gates\.conf|\.claude/|\.agents/|\.codex/)'; then
-  if printf '%s' "$CMD" | grep -qE '(^|[;&|[:space:]])(sed|tee|cat[[:space:]]*>|>|>>|rm|mv|cp|truncate)'; then
-    block "writing to a protected factory file via the shell"
-  fi
+#
+# A command is blocked only when a write operation actually targets a protected path in
+# the same command segment: a redirect whose target is protected, or a write verb
+# (tee, rm, mv, cp, truncate, sed -i) with a protected path among its arguments. Merely
+# mentioning a protected path (running gates.sh, reading a file, a `>/dev/null` or
+# `2>&1` elsewhere in the command) is allowed.
+PROT='(docs/factory/CHARTER\.md|\.factory/gates\.conf|\.claude/|\.agents/|\.codex/)'
+if printf '%s' "$CMD" | grep -qE ">>?[[:space:]]*[^[:space:];&|]*${PROT}"; then
+  block "writing to a protected factory file via the shell"
+fi
+if printf '%s' "$CMD" | grep -qE "(^|[;&|[:space:]])(tee|rm|mv|cp|truncate|sed[[:space:]]+(-[a-zA-Z]*i|--in-place))([[:space:]][^;&|]*)?${PROT}"; then
+  block "writing to a protected factory file via the shell"
 fi
 
 exit 0
