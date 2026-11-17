@@ -40,7 +40,7 @@ def _check_field(
         if value <= 0:
             raise CardDataError(f"{where} must be greater than 0, got {value}")
         return value
-    if not isinstance(value, str) or not value:
+    if not isinstance(value, str) or not value.strip():
         raise CardDataError(f"{where} must be a non-empty string, got {value!r}")
     return value
 
