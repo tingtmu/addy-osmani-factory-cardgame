@@ -1,20 +1,27 @@
-# <PROJECT NAME>
+# Card Roguelike Skill-Mechanics Engine
 
-<One paragraph: what this is and who depends on it.>
+A pure-logic, turn-based card battle engine (no UI) where cards and skills are defined
+entirely as data. Personal greenfield project; see `spec.md` for goals and milestones.
 
 ## Commands
 
 ```bash
-<install>        # e.g. pnpm install
-<dev>            # e.g. pnpm dev
-<test>           # e.g. pnpm test
+python -m venv .venv && . .venv/bin/activate && pip install -e ".[dev]"   # install
+pytest                                                                    # test
+ruff check .                                                              # lint
+mypy src                                                                  # types
 ./.claude/scripts/gates.sh full   # the factory's deterministic verdict
 ```
 
 ## Conventions
 
-<Language, framework, module layout, patterns to follow, patterns to avoid.
-Keep this short and specific. Vague style guidance produces vague code.>
+- Python 3.11+, pytest, `src/` layout (package `cardengine`), full type hints.
+- Cards, effects and statuses are JSON/data files under `data/`; adding a card must
+  never require engine code changes. Engine code interprets effect types generically.
+- All randomness goes through one seeded RNG passed in explicitly; no global `random`.
+  Same seed must give the same result.
+- Every feature ships with unit tests under `tests/`. Never edit existing tests unattended.
+- No UI, no I/O in the engine core.
 
 ---
 

@@ -10,7 +10,7 @@ not continuously.
 Set this to `ready` only after reviewing every section:
 
 ```
-CHARTER_STATUS: incomplete
+CHARTER_STATUS: ready
 ```
 
 ---
@@ -27,7 +27,7 @@ Delete all but one. This single choice sets how much autonomy every routine gets
 | `client-production` | Someone else's business depends on this. | Narrow. Short loops, no unattended merges, everything read. |
 
 ```
-TIER: <choose one tier>
+TIER: greenfield
 ```
 
 **Why the tier and not the difficulty:** autonomy tracks who gets hurt when it is wrong.
