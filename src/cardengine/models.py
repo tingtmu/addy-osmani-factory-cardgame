@@ -1,15 +1,14 @@
 from collections.abc import Mapping
 from dataclasses import dataclass, field
-from types import MappingProxyType
 
 
+# Effect is frozen, so attribute reassignment is blocked. ``params`` is the
+# caller's mapping and is not copied, so immutability is shallow: mutating the
+# mapping the caller passed in will change the Effect.
 @dataclass(frozen=True)
 class Effect:
     type: str
     params: Mapping[str, int | str]
-
-    def __post_init__(self) -> None:
-        object.__setattr__(self, "params", MappingProxyType(dict(self.params)))
 
 
 @dataclass(frozen=True)

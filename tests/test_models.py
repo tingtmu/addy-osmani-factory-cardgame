@@ -1,4 +1,6 @@
+import copy
 import dataclasses
+import pickle
 
 import pytest
 
@@ -40,6 +42,19 @@ def test_unit_zones_are_independent_between_instances() -> None:
     assert second.hand == []
 
 
+def test_unit_deck_and_discard_are_independent_between_instances() -> None:
+    first = Unit(name="a", max_hp=10, hp=10, energy=3)
+    second = Unit(name="b", max_hp=10, hp=10, energy=3)
+
+    first.deck.append(_card("d"))
+    first.discard.append(_card("e"))
+
+    assert len(first.deck) == 1
+    assert len(first.discard) == 1
+    assert second.deck == []
+    assert second.discard == []
+
+
 def test_unit_zones_are_distinct_lists_within_one_unit() -> None:
     unit = Unit(name="a", max_hp=10, hp=10, energy=3)
 
@@ -65,18 +80,21 @@ def test_effect_is_frozen() -> None:
         effect.type = "heal"  # type: ignore[misc]
 
 
-def test_effect_params_is_read_only() -> None:
-    effect = Effect(type="damage", params={"amount": 6})
+def test_card_with_effect_survives_deepcopy_pickle_and_asdict() -> None:
+    card = Card(
+        id="c2",
+        name="Strike",
+        cost=1,
+        effects=(Effect(type="damage", params={"amount": 6, "target": "enemy"}),),
+    )
 
-    with pytest.raises(TypeError):
-        effect.params["amount"] = 99  # type: ignore[index]
-
-
-def test_effect_params_not_affected_by_caller_mutation() -> None:
-    source: dict[str, int | str] = {"amount": 6}
-    effect = Effect(type="damage", params=source)
-
-    source["amount"] = 99
-    source["extra"] = "boom"
-
-    assert effect.params == {"amount": 6}
+    assert copy.deepcopy(card) == card
+    assert pickle.loads(pickle.dumps(card)) == card
+    assert dataclasses.asdict(card) == {
+        "id": "c2",
+        "name": "Strike",
+        "cost": 1,
+        "effects": (
+            {"type": "damage", "params": {"amount": 6, "target": "enemy"}},
+        ),
+    }
