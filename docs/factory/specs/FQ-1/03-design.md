@@ -40,7 +40,7 @@ def load_cards(path: Path) -> dict[str, Card]
 
 ## Tests (what each proves)
 - test_smoke: package imports (proves tooling and gates work).
-- test_models: Card/Effect cannot be reassigned (frozen, params exposed read-only);
+- test_models: Card/Effect cannot be reassigned (frozen, shallow: attributes cannot be reassigned, params contents are not copied or wrapped);
   Status duration None means permanent; Unit holds zones independently.
 - test_effects: each of 4 types accepts valid params; rejects unknown type, missing field,
   unknown extra field, non-positive amount, wrong value type, and bool-as-int.
