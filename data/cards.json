@@ -1,0 +1,1 @@
+{"cards":[{"id":"strike","name":"Strike","cost":1,"effects":[{"type":"damage","amount":6}]},{"id":"defend","name":"Defend","cost":1,"effects":[{"type":"shield","amount":5}]},{"id":"quick_study","name":"Quick Study","cost":1,"effects":[{"type":"draw","amount":2}]}]}
