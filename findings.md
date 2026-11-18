@@ -84,6 +84,35 @@ also needed a second pass. Some of that was unavoidable. Some was my doing.
    spec gates and per-slice human reads cost more than the risk they remove. The factory
    suits work that will be maintained and reviewed by others.
 
+## Slicing trade-off: must a milestone be split?
+
+Question raised afterwards: other software factories solve a whole milestone in one go, so
+does Addy's workflow really require splitting? (I have not checked how other factories
+work; that comparison is the user's description, not something verified here.)
+
+**What the workflow requires**
+- `factory-implement` claims one queue item per run, so a milestone is not one item.
+- The charter caps an item at 400 changed lines. Milestone 1 came to about 640 lines, so it
+  could not have been one item. Two is the minimum.
+- Gate 4 of the spec is the slicing step. Every slice needs its own `done_when`, must be
+  independently shippable and testable, and small enough to review in one sitting.
+
+**How the mapping works**
+One milestone is one spec (for example FQ-1). The spec is cut into slices, and each slice is
+one issue that goes through claim, gates, verifier, PR and a human merge.
+
+**What is a matter of choice**
+Slice size. A one-slice milestone is allowed when the diff fits under the limit. Milestones
+2 to 4 may each fit. The cost is that the verifier reads a bigger diff and a rejection
+sends the whole thing back. This run used six slices of roughly 50 to 150 lines, far below
+the limit. Three of about 200 lines would have paid the fixed per-item cost half as often:
+slices 0 and 1 together, slices 2 and 3 together (one validation chain), slices 4 and 5
+together.
+
+**Limit**
+The 400-line cap lives in `docs/factory/CHARTER.md`, which only the human edits. Raising it
+is their call. I would not raise it far, since verification quality drops as the diff grows.
+
 ## State at the end of Milestone 1
 
 - Merged: slices 0 to 5 and the hook change. Master is green.
